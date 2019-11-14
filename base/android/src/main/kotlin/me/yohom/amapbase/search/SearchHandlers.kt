@@ -285,6 +285,89 @@ object CalculateDriveRoute : SearchMethodHandler {
     }
 }
 
+
+
+/**
+ * 步行出行路线规划
+ */
+object CalculateWalkRoute : SearchMethodHandler {
+
+    override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
+        // 规划参数
+        val param = call.argument<String>("routePlanParam")!!.parseFieldJson<RoutePlanParam>()
+
+        log("方法calculateWalkRoute android端参数: routePlanParam -> $param")
+
+        val routeQuery = RouteSearch.WalkRouteQuery(
+                RouteSearch.FromAndTo(param.from.toLatLonPoint(), param.to.toLatLonPoint()),
+                param.mode
+        )
+        RouteSearch(registrar.context()).run {
+            setRouteSearchListener(object : RouteSearch.OnRouteSearchListener {
+                override fun onDriveRouteSearched(r: DriveRouteResult?, errorCode: Int) {
+                }
+
+                override fun onBusRouteSearched(result: BusRouteResult?, errorCode: Int) {}
+
+                override fun onRideRouteSearched(result: RideRouteResult?, errorCode: Int) {}
+
+                override fun onWalkRouteSearched(r: WalkRouteResult?, errorCode: Int) {
+                    if (errorCode != AMapException.CODE_AMAP_SUCCESS || r == null) {
+                        result.error("路线规划失败, 错误码: $errorCode", null, null)
+                    } else if (r.paths.isEmpty()) {
+                        result.error("没有规划出合适的路线", null, null)
+                    } else {
+                        result.success(UnifiedWalkRouteResult(r).toFieldJson())
+                    }
+                }
+            })
+
+            calculateWalkRouteAsyn(routeQuery)
+        }
+    }
+}
+
+/**
+ * 骑行出行路线规划
+ */
+object CalculateRideRoute : SearchMethodHandler {
+
+    override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
+        // 规划参数
+        val param = call.argument<String>("routePlanParam")!!.parseFieldJson<RoutePlanParam>()
+
+        log("方法calculateRideRoute android端参数: routePlanParam -> $param")
+
+        val routeQuery = RouteSearch.RideRouteQuery(
+                RouteSearch.FromAndTo(param.from.toLatLonPoint(), param.to.toLatLonPoint()),
+                param.mode
+        )
+        RouteSearch(registrar.context()).run {
+            setRouteSearchListener(object : RouteSearch.OnRouteSearchListener {
+                override fun onDriveRouteSearched(r: DriveRouteResult?, errorCode: Int) {
+                }
+
+                override fun onBusRouteSearched(result: BusRouteResult?, errorCode: Int) {}
+
+                override fun onRideRouteSearched(r: RideRouteResult?, errorCode: Int) {
+                    if (errorCode != AMapException.CODE_AMAP_SUCCESS || r == null) {
+                        result.error("路线规划失败, 错误码: $errorCode", null, null)
+                    } else if (r.paths.isEmpty()) {
+                        result.error("没有规划出合适的路线", null, null)
+                    } else {
+                        result.success(UnifiedRideRouteResult(r).toFieldJson())
+                    }
+                }
+
+                override fun onWalkRouteSearched(r: WalkRouteResult?, errorCode: Int) {}
+            })
+
+            calculateRideRouteAsyn(routeQuery)
+        }
+    }
+}
+
+
 object DistanceSearchHandler : SearchMethodHandler {
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         val search = DistanceSearch(AMapBasePlugin.registrar.context())

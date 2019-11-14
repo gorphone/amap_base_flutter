@@ -30,6 +30,8 @@ export 'src/map/offline_manager.dart';
 export 'src/navi/amap_navi.dart';
 export 'src/search/amap_search.dart';
 export 'src/search/model/drive_route_result.dart';
+export 'src/search/model/walk_route_result.dart';
+export 'src/search/model/ride_route_result.dart';
 export 'src/search/model/geocode_result.dart';
 export 'src/search/model/poi_search_query.dart';
 export 'src/search/model/poi_item.dart';

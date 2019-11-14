@@ -147,6 +147,57 @@
 
 @end
 
+
+@implementation UnifiedRideRouteResult {
+
+}
+- (instancetype)initWithAMapRouteSearchResponse:(AMapRouteSearchResponse *)response {
+    if ([self init]) {
+        _startPos = response.route.origin;
+        _targetPos = response.route.destination;
+        _paths = [response.route.paths map:^(AMapPath *path) {
+            return [[UnifiedRidePath alloc] initWithAMapPath:path];
+        }];
+    }
+    return self;
+}
+
+@end
+
+@implementation UnifiedRidePath {
+}
+
+- (instancetype)initWithAMapPath:(AMapPath *)path {
+    if ([self init]) {
+        _steps = [path.steps map:^(AMapStep *step) {
+            return [[UnifiedRideStep alloc] initWithAMapStep:step];
+        }];
+    }
+    return self;
+}
+
+@end
+
+@implementation UnifiedRideStep {
+
+}
+- (instancetype)initWithAMapStep:(AMapStep *)step {
+    if ([self init]) {
+        _instruction = step.instruction;
+        _orientation = step.orientation;
+        _road = step.road;
+        _distance = step.distance;
+        _duration = step.duration;
+        _polyline = [step.polyline stringToAMapGeoPoint];
+        _action = step.action;
+        _assistantAction = step.assistantAction;
+        _tollRoad = step.tollRoad;
+    }
+    return self;
+}
+
+@end
+
 @implementation UnifiedRouteSearchCityResult {
 
 }

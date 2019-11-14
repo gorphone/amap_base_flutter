@@ -2,28 +2,28 @@ import 'dart:convert';
 
 import 'package:amap_base/amap_base.dart';
 
-class WalkRouteResult {
-  List<WalkPath> paths;
+class RideRouteResult {
+  List<RidePath> paths;
   LatLng startPos;
   LatLng targetPos;
 
-  WalkRouteResult({
+  RideRouteResult({
     this.paths,
     this.startPos,
     this.targetPos,
   });
 
-  WalkRouteResult.fromJson(Map<String, dynamic> json) {
+  RideRouteResult.fromJson(Map<String, dynamic> json) {
     if (json['paths'] != null) {
-      paths = List<WalkPath>();
+      paths = List<RidePath>();
       json['paths'].forEach((v) {
-        paths.add(WalkPath.fromJson(v as Map<String, dynamic>));
+        paths.add(RidePath.fromJson(v as Map<String, dynamic>));
       });
     }
     startPos =
-        json['startPos'] != null ? LatLng.fromJson(json['startPos']) : null;
+    json['startPos'] != null ? LatLng.fromJson(json['startPos']) : null;
     targetPos =
-        json['targetPos'] != null ? LatLng.fromJson(json['targetPos']) : null;
+    json['targetPos'] != null ? LatLng.fromJson(json['targetPos']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -40,13 +40,13 @@ class WalkRouteResult {
     return data;
   }
 
-  WalkRouteResult copyWith({
+  RideRouteResult copyWith({
     List paths,
     LatLng startPos,
     LatLng targetPos,
     num taxiCost,
   }) {
-    return WalkRouteResult(
+    return RideRouteResult(
       paths: paths ?? this.paths,
       startPos: startPos ?? this.startPos,
       targetPos: targetPos ?? this.targetPos,
@@ -56,11 +56,11 @@ class WalkRouteResult {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is WalkRouteResult &&
-          runtimeType == other.runtimeType &&
-          paths == other.paths &&
-          startPos == other.startPos &&
-          targetPos == other.targetPos;
+          other is RideRouteResult &&
+              runtimeType == other.runtimeType &&
+              paths == other.paths &&
+              startPos == other.startPos &&
+              targetPos == other.targetPos;
 
   @override
   int get hashCode => paths.hashCode ^ startPos.hashCode ^ targetPos.hashCode;
@@ -71,15 +71,15 @@ class WalkRouteResult {
   }
 }
 
-class WalkPath {
+class RidePath {
   num restriction;
-  List<WalkSteps> steps;
+  List<RideSteps> steps;
   String strategy;
   num tollDistance;
   num tolls;
   num totalTrafficlights;
 
-  WalkPath({
+  RidePath({
     this.restriction,
     this.steps,
     this.strategy,
@@ -88,12 +88,12 @@ class WalkPath {
     this.totalTrafficlights,
   });
 
-  WalkPath.fromJson(Map<String, dynamic> json) {
+  RidePath.fromJson(Map<String, dynamic> json) {
     restriction = json['restriction'] as num;
     if (json['steps'] != null) {
-      steps = List<WalkSteps>();
+      steps = List<RideSteps>();
       json['steps'].forEach((v) {
-        steps.add(WalkSteps.fromJson(v as Map<String, dynamic>));
+        steps.add(RideSteps.fromJson(v as Map<String, dynamic>));
       });
     }
     strategy = json['strategy'] as String;
@@ -115,7 +115,7 @@ class WalkPath {
     return data;
   }
 
-  WalkPath copyWith({
+  RidePath copyWith({
     int restriction,
     List steps,
     String strategy,
@@ -123,7 +123,7 @@ class WalkPath {
     num tolls,
     int totalTrafficlights,
   }) {
-    return WalkPath(
+    return RidePath(
       restriction: restriction ?? this.restriction,
       steps: steps ?? this.steps,
       strategy: strategy ?? this.strategy,
@@ -136,14 +136,14 @@ class WalkPath {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is WalkPath &&
-          runtimeType == other.runtimeType &&
-          restriction == other.restriction &&
-          steps == other.steps &&
-          strategy == other.strategy &&
-          tollDistance == other.tollDistance &&
-          tolls == other.tolls &&
-          totalTrafficlights == other.totalTrafficlights;
+          other is RidePath &&
+              runtimeType == other.runtimeType &&
+              restriction == other.restriction &&
+              steps == other.steps &&
+              strategy == other.strategy &&
+              tollDistance == other.tollDistance &&
+              tolls == other.tolls &&
+              totalTrafficlights == other.totalTrafficlights;
 
   @override
   int get hashCode =>
@@ -166,7 +166,7 @@ class WalkPath {
   }
 }
 
-class WalkSteps {
+class RideSteps {
   String instruction;
   String orientation;
   String road;
@@ -176,7 +176,7 @@ class WalkSteps {
   String action;
   String assistantAction;
 
-  WalkSteps({
+  RideSteps({
     this.action,
     this.assistantAction,
     this.distance,
@@ -187,7 +187,7 @@ class WalkSteps {
     this.road,
   });
 
-  WalkSteps.fromJson(Map<String, dynamic> json) {
+  RideSteps.fromJson(Map<String, dynamic> json) {
     action = json['action'] as String;
     assistantAction = json['assistantAction'] as String;
     distance = json['distance'] as num;
@@ -218,7 +218,7 @@ class WalkSteps {
     return data;
   }
 
-  WalkSteps copyWith({
+  RideSteps copyWith({
     String action,
     String assistantAction,
     num distance,
@@ -228,7 +228,7 @@ class WalkSteps {
     List polyline,
     String road,
   }) {
-    return WalkSteps(
+    return RideSteps(
       action: action ?? this.action,
       assistantAction: assistantAction ?? this.assistantAction,
       distance: distance ?? this.distance,
@@ -243,16 +243,16 @@ class WalkSteps {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is WalkSteps &&
-          runtimeType == other.runtimeType &&
-          action == other.action &&
-          assistantAction == other.assistantAction &&
-          distance == other.distance &&
-          duration == other.duration &&
-          instruction == other.instruction &&
-          orientation == other.orientation &&
-          polyline == other.polyline &&
-          road == other.road;
+          other is RideSteps &&
+              runtimeType == other.runtimeType &&
+              action == other.action &&
+              assistantAction == other.assistantAction &&
+              distance == other.distance &&
+              duration == other.duration &&
+              instruction == other.instruction &&
+              orientation == other.orientation &&
+              polyline == other.polyline &&
+              road == other.road;
 
   @override
   int get hashCode =>
@@ -267,6 +267,6 @@ class WalkSteps {
 
   @override
   String toString() {
-    return 'WalkSteps{instruction: $instruction, orientation: $orientation, road: $road, distance: $distance, duration: $duration, polyline: $polyline, action: $action, assistantAction: $assistantAction}';
+    return 'RideSteps{instruction: $instruction, orientation: $orientation, road: $road, distance: $distance, duration: $duration, polyline: $polyline, action: $action, assistantAction: $assistantAction}';
   }
 }

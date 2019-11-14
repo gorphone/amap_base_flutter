@@ -56,7 +56,7 @@
 /// 搜索失败回调
 - (void)AMapSearchRequest:(id)request didFailWithError:(NSError *)error {
   NSLog(@"搜索失败回调");
-  _result([FlutterError errorWithCode:[NSString stringWithFormat:@"%d", error.code]
+  _result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code]
                               message:[Misc toAMapErrorDesc:error.code]
                               details:nil]);
 }
@@ -88,7 +88,7 @@
   double radius = [paramDic[@"radius"] doubleValue];
   NSInteger latLonType = [paramDic[@"latLonType"] integerValue];
 
-  NSLog(@"search#searchReGeocode ios端参数: point -> %@, radius -> %f, latLonType -> %d", pointJson, radius, latLonType);
+  NSLog(@"search#searchReGeocode ios端参数: point -> %@, radius -> %f, latLonType -> %ld", pointJson, radius, latLonType);
 
   AMapGeoPoint *point = [AMapGeoPoint mj_objectWithKeyValues:pointJson];
 
@@ -115,7 +115,7 @@
 /// 搜索失败回调
 - (void)AMapSearchRequest:(id)request didFailWithError:(NSError *)error {
   NSLog(@"搜索失败回调");
-  _result([FlutterError errorWithCode:[NSString stringWithFormat:@"%d", error.code]
+  _result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code]
                               message:[Misc toAMapErrorDesc:error.code]
                               details:nil]);
 }
@@ -507,6 +507,61 @@
 
 @end
 
+/// 骑行路线导航
+@implementation CalculateRideRoute {
+  RoutePlanParam *_routePlanParam;
+  AMapSearchAPI *_search;
+  FlutterResult _result;
+}
+
+- (instancetype)init {
+  self = [super init];
+  if (self) {
+    // 搜索api回调设置
+    _search = [[AMapSearchAPI alloc] init];
+    _search.delegate = self;
+  }
+
+  return self;
+}
+
+- (void)onMethodCall:(FlutterMethodCall *)call :(FlutterResult)result {
+  _result = result;
+
+  NSDictionary *paramDic = call.arguments;
+
+  NSString *routePlanParamJson = (NSString *) paramDic[@"routePlanParam"];
+
+  NSLog(@"方法calculateRideRoute ios端参数: routePlanParamJson -> %@", routePlanParamJson);
+
+  _routePlanParam = [RoutePlanParam mj_objectWithKeyValues:routePlanParamJson];
+
+  // 路线请求参数构造
+  AMapRidingRouteSearchRequest *routeQuery = [[AMapRidingRouteSearchRequest alloc] init];
+  routeQuery.origin = _routePlanParam.from;
+  routeQuery.destination = _routePlanParam.to;
+
+  [_search AMapRidingRouteSearch:routeQuery];
+}
+
+/// 路径规划搜索回调.
+- (void)onRouteSearchDone:(AMapRouteSearchBaseRequest *)request response:(AMapRouteSearchResponse *)response {
+  if (response.route.paths.count == 0) {
+    return _result(@"没有规划出合适的路线");
+  }
+
+  _result([[[UnifiedRideRouteResult alloc] initWithAMapRouteSearchResponse:response] mj_JSONString]);
+}
+
+/// 路线规划失败回调
+- (void)AMapSearchRequest:(id)request didFailWithError:(NSError *)error {
+  if (_result != nil) {
+    _result([NSString stringWithFormat:@"路线规划失败, 错误码: %ld", (long) error.code]);
+  }
+}
+
+@end
+
 @implementation DistanceSearch {
   AMapSearchAPI *_search;
   FlutterResult _result;
@@ -669,7 +724,7 @@
 
 /// 搜索失败回调
 - (void)AMapSearchRequest:(id)request didFailWithError:(NSError *)error {
-    _result([FlutterError errorWithCode:[NSString stringWithFormat:@"%d", error.code]
+    _result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code]
                                 message:[Misc toAMapErrorDesc:error.code]
                                 details:nil]);
 }

@@ -57,6 +57,8 @@ static NSDictionary<NSString *, NSObject <SearchMethodHandler> *> *_searchDictio
     if (!_searchDictionary) {
         _searchDictionary = @{
                 @"search#calculateDriveRoute": [CalculateDriveRoute alloc],
+                @"search#calculateWalkRoute": [CalculateWalkRoute alloc],
+                @"search#calculateRideRoute": [CalculateRideRoute alloc],
                 @"search#searchPoi": [SearchPoiKeyword alloc],
                 @"search#searchPoiBound": [SearchPoiBound alloc],
                 @"search#searchPoiPolygon": [SearchPoiPolygon alloc],

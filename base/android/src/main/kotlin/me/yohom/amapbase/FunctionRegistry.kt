@@ -41,6 +41,8 @@ val MAP_METHOD_HANDLER: Map<String, MapMethodHandler> = mapOf(
  */
 val SEARCH_METHOD_HANDLER: Map<String, SearchMethodHandler> = mapOf(
         "search#calculateDriveRoute" to CalculateDriveRoute,
+        "search#calculateWalkRoute" to CalculateWalkRoute,
+        "search#calculateRideRoute" to CalculateRideRoute,
         "search#searchPoi" to SearchPoiKeyword,
         "search#searchPoiBound" to SearchPoiBound,
         "search#searchPoiPolygon" to SearchPoiPolygon,
