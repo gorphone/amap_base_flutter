@@ -117,7 +117,7 @@ static NSString *markerEventChannelName = @"me.yohom/marker_event";
   __weak __typeof__(self) weakSelf = self;
   [_methodChannel setMethodCallHandler:^(FlutterMethodCall *call, FlutterResult result) {
     NSObject <MapMethodHandler> *handler = [MapFunctionRegistry mapMethodHandler][call.method];
-    if (handler) {
+    if (handler && weakSelf) {
       __typeof__(self) strongSelf = weakSelf;
       [[handler initWith:strongSelf->_mapView] onMethodCall:call :result];
     } else {
