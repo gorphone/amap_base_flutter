@@ -15,13 +15,33 @@
 static NSString *mapChannelName = @"me.yohom/map";
 //static NSString *markerClickedChannelName = @"me.yohom/marker_clicked";
 
+static NSString *mapChangeEventChannelName = @"me.yohom/mapview_event";
+
 static NSString *markerEventChannelName = @"me.yohom/marker_event";
 
 @interface MarkerEventHandler : NSObject <FlutterStreamHandler>
 @property(nonatomic) FlutterEventSink sink;
 @end
 
+@interface MapChangeEventHandler : NSObject <FlutterStreamHandler>
+@property(nonatomic) FlutterEventSink sink;
+@end
+
 @implementation MarkerEventHandler {
+}
+
+- (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
+                                       eventSink:(FlutterEventSink)events {
+  _sink = events;
+  return nil;
+}
+
+- (FlutterError *_Nullable)onCancelWithArguments:(id _Nullable)arguments {
+  return nil;
+}
+@end
+
+@implementation MapChangeEventHandler {
 }
 
 - (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
@@ -61,8 +81,10 @@ static NSString *markerEventChannelName = @"me.yohom/marker_event";
   UnifiedAMapOptions *_options;
   FlutterMethodChannel *_methodChannel;
   FlutterEventChannel *_markerClickedEventChannel;
+  FlutterEventChannel *_mapChangeEventChannel;
   MAMapView *_mapView;
   MarkerEventHandler *_eventHandler;
+  MapChangeEventHandler *_mapChangeEventHandler;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -117,7 +139,7 @@ static NSString *markerEventChannelName = @"me.yohom/marker_event";
   __weak __typeof__(self) weakSelf = self;
   [_methodChannel setMethodCallHandler:^(FlutterMethodCall *call, FlutterResult result) {
     NSObject <MapMethodHandler> *handler = [MapFunctionRegistry mapMethodHandler][call.method];
-    if (handler) {
+    if (handler && weakSelf) {
       __typeof__(self) strongSelf = weakSelf;
       [[handler initWith:strongSelf->_mapView] onMethodCall:call :result];
     } else {
@@ -130,6 +152,12 @@ static NSString *markerEventChannelName = @"me.yohom/marker_event";
   _markerClickedEventChannel = [FlutterEventChannel eventChannelWithName:[NSString stringWithFormat:@"%@%lld", markerEventChannelName, _viewId]
                                                          binaryMessenger:[AMapBasePlugin registrar].messenger];
   [_markerClickedEventChannel setStreamHandler:_eventHandler];
+    
+  _mapChangeEventHandler = [[MapChangeEventHandler alloc] init];
+  _mapChangeEventChannel = [FlutterEventChannel eventChannelWithName:[NSString stringWithFormat:@"%@%lld", mapChangeEventChannelName, _viewId] binaryMessenger:[AMapBasePlugin registrar].messenger];
+  
+  [_mapChangeEventChannel setStreamHandler:_mapChangeEventHandler];
+    NSLog(@"setup done=============");
 }
 
 #pragma MAMapViewDelegate
@@ -290,6 +318,20 @@ static NSString *markerEventChannelName = @"me.yohom/marker_event";
   }
 
   return nil;
+}
+
+- (void)mapView:(MAMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
+    MACoordinateRegion region;
+    CLLocationCoordinate2D centerCoordinate = mapView.region.center;
+    region.center = centerCoordinate;
+    
+    NSDictionary *d = @{
+                        @"latitude": @(centerCoordinate.latitude),
+                        @"longitude": @(centerCoordinate.longitude),
+                        };
+    if (animated) {
+        _mapChangeEventHandler.sink([d mj_JSONString]);
+    }
 }
 
 @end

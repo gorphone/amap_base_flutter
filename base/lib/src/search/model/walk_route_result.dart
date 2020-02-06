@@ -73,7 +73,7 @@ class WalkRouteResult {
 
 class WalkPath {
   num restriction;
-  List<Steps> steps;
+  List<WalkSteps> steps;
   String strategy;
   num tollDistance;
   num tolls;
@@ -91,9 +91,9 @@ class WalkPath {
   WalkPath.fromJson(Map<String, dynamic> json) {
     restriction = json['restriction'] as num;
     if (json['steps'] != null) {
-      steps = List<Steps>();
+      steps = List<WalkSteps>();
       json['steps'].forEach((v) {
-        steps.add(Steps.fromJson(v as Map<String, dynamic>));
+        steps.add(WalkSteps.fromJson(v as Map<String, dynamic>));
       });
     }
     strategy = json['strategy'] as String;
@@ -166,7 +166,7 @@ class WalkPath {
   }
 }
 
-class Steps {
+class WalkSteps {
   String instruction;
   String orientation;
   String road;
@@ -176,7 +176,7 @@ class Steps {
   String action;
   String assistantAction;
 
-  Steps({
+  WalkSteps({
     this.action,
     this.assistantAction,
     this.distance,
@@ -187,7 +187,7 @@ class Steps {
     this.road,
   });
 
-  Steps.fromJson(Map<String, dynamic> json) {
+  WalkSteps.fromJson(Map<String, dynamic> json) {
     action = json['action'] as String;
     assistantAction = json['assistantAction'] as String;
     distance = json['distance'] as num;
@@ -218,7 +218,7 @@ class Steps {
     return data;
   }
 
-  Steps copyWith({
+  WalkSteps copyWith({
     String action,
     String assistantAction,
     num distance,
@@ -228,7 +228,7 @@ class Steps {
     List polyline,
     String road,
   }) {
-    return Steps(
+    return WalkSteps(
       action: action ?? this.action,
       assistantAction: assistantAction ?? this.assistantAction,
       distance: distance ?? this.distance,
@@ -243,7 +243,7 @@ class Steps {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Steps &&
+      other is WalkSteps &&
           runtimeType == other.runtimeType &&
           action == other.action &&
           assistantAction == other.assistantAction &&
@@ -267,6 +267,6 @@ class Steps {
 
   @override
   String toString() {
-    return 'Steps{instruction: $instruction, orientation: $orientation, road: $road, distance: $distance, duration: $duration, polyline: $polyline, action: $action, assistantAction: $assistantAction}';
+    return 'WalkSteps{instruction: $instruction, orientation: $orientation, road: $road, distance: $distance, duration: $duration, polyline: $polyline, action: $action, assistantAction: $assistantAction}';
   }
 }

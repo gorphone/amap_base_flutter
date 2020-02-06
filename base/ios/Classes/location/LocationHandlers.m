@@ -59,6 +59,8 @@ static AMapLocationManager *_locationManager;
     _locationManager.delegate = self;
 
     [options applyTo:_locationManager];
+    
+    NSLog(@"isOnceLocation %d", options.isOnceLocation);
 
     if (options.isOnceLocation) {
         [_locationManager requestLocationWithReGeocode:YES
@@ -70,12 +72,12 @@ static AMapLocationManager *_locationManager;
                                            } else {
                                                result(@"开始定位");
                                            }
-
                                            _sink([[[UnifiedAMapLocation alloc] initWithLocation:location
                                                                                   withRegoecode:regeocode
                                                                                       withError:error] mj_JSONString]);
                                        }];
     } else {
+        [_locationManager setLocatingWithReGeocode:YES];
         [_locationManager startUpdatingLocation];
     }
 

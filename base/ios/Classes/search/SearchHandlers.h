@@ -37,6 +37,9 @@
 @interface CalculateWalkRoute : NSObject <SearchMethodHandler, AMapSearchDelegate>
 @end
 
+@interface CalculateRideRoute : NSObject <SearchMethodHandler, AMapSearchDelegate>
+@end
+
 @interface DistanceSearch : NSObject <SearchMethodHandler, AMapSearchDelegate>
 @end
 

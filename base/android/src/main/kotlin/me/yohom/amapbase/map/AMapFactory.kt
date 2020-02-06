@@ -23,6 +23,7 @@ import org.json.JSONObject
 import java.util.concurrent.atomic.AtomicInteger
 
 const val mapChannelName = "me.yohom/map"
+const val mapChangeChannelName = "me.yohom/marker_event"
 const val markerClickedChannelName = "me.yohom/marker_event"
 const val success = "调用成功"
 
@@ -98,6 +99,29 @@ class AMapView(context: Context,
 
             override fun onCancel(p0: Any?) {}
         })
+
+        var mapChangeEventSink: EventChannel.EventSink? = null
+        val mapChangeEventChannel = EventChannel(registrar.messenger(), "$mapChangeChannelName$id")
+        mapChangeEventChannel.setStreamHandler(object : EventChannel.StreamHandler {
+            override fun onListen(p0: Any?, sink: EventChannel.EventSink?) {
+                mapChangeEventSink = sink
+            }
+
+            override fun onCancel(p0: Any?) {}
+        })
+
+        mapView.map.setOnCameraChangeListener(object: AMap.OnCameraChangeListener {
+            override fun onCameraChange(CameraPosition cameraPosition) {
+
+            }
+
+            override fun onCameraChangeFinish(CameraPosition cameraPosition) {
+                var o = JSONObject()
+                o.put("latitude", cameraPosition.target?.latitude)
+                o.put("longitude", cameraPosition.target?.longitude)
+                mapChangeEventSink?.success(o.toString());
+            }
+        );
 
         mapView.map.setOnMarkerClickListener {
             var o = JSONObject()

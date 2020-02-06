@@ -284,6 +284,26 @@ class MarkerOptions {
   }
 }
 
+class MapViewChangeEvent {
+  double latitude;
+  double longitude;
+
+  MapViewChangeEvent({this.longitude, this.latitude});
+
+  MapViewChangeEvent.fromJson(Map<String, Object> json) {
+    latitude = json['latitude'];
+    longitude = json['longitude'];
+  }
+
+  Map<String, Object> toJson() {
+    var m = {
+      'latitude': latitude,
+      'longitude': longitude
+    };
+    return m;
+  }
+}
+
 
 class MarkerEvent {
   MarkerOptions options;

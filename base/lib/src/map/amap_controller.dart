@@ -14,10 +14,12 @@ import 'package:meta/meta.dart';
 
 class AMapController {
   final MethodChannel _mapChannel;
+  final EventChannel _mapViewChangeEventChannel;
   final EventChannel _markerClickedEventChannel;
 
   AMapController.withId(int id)
       : _mapChannel = MethodChannel('me.yohom/map$id'),
+        _mapViewChangeEventChannel = EventChannel('me.yohom/mapview_event$id'),
         _markerClickedEventChannel = EventChannel('me.yohom/marker_event$id');
 
   void dispose() {}
@@ -268,6 +270,11 @@ class AMapController {
   }
 
   //endregion
+
+  /// 地图变化事件刘
+  Stream<MapViewChangeEvent> get mapViewChangeEvent => _mapViewChangeEventChannel
+      .receiveBroadcastStream()
+      .map((data) => MapViewChangeEvent.fromJson(jsonDecode(data)));
 
   /// marker点击事件流
  Stream<MarkerEvent> get markerClickedEvent => _markerClickedEventChannel

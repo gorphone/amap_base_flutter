@@ -59,6 +59,8 @@
 @class BusStation;
 @class UnifiedWalkPath;
 @class UnifiedWalkStep;
+@class UnifiedRidePath;
+@class UnifiedRideStep;
 
 //region RoutePlanParam
 @interface RoutePlanParam : NSObject
@@ -133,6 +135,34 @@
 @end
 
 @interface UnifiedWalkStep : NSObject
+- (instancetype)initWithAMapStep:(AMapStep *)step;
+
+@property(nonatomic) NSString *instruction;
+@property(nonatomic) NSString *orientation;
+@property(nonatomic) NSString *road;
+@property(nonatomic) CGFloat distance;
+@property(nonatomic) NSString *tollRoad;
+@property(nonatomic) CGFloat duration;
+@property(nonatomic) NSArray <AMapGeoPoint *> *polyline;
+@property(nonatomic) NSString *action;
+@property(nonatomic) NSString *assistantAction;
+@end
+
+
+@interface UnifiedRideRouteResult : NSObject
+- (instancetype)initWithAMapRouteSearchResponse:(AMapRouteSearchResponse *)response;
+
+@property(nonatomic) AMapGeoPoint *startPos;
+@property(nonatomic) AMapGeoPoint *targetPos;
+@property(nonatomic) NSArray <UnifiedRidePath *> *paths;
+@end
+
+@interface UnifiedRidePath : NSObject
+- (instancetype)initWithAMapPath:(AMapPath *)path;
+@property(nonatomic) NSArray <UnifiedRideStep *> *steps;
+@end
+
+@interface UnifiedRideStep : NSObject
 - (instancetype)initWithAMapStep:(AMapStep *)step;
 
 @property(nonatomic) NSString *instruction;

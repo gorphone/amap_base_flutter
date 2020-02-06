@@ -122,6 +122,19 @@ class AMapSearch {
         .then((json) => WalkRouteResult.fromJson(jsonDecode(json)));
   }
 
+  /// 计算骑行路线
+  Future<RideRouteResult> calculateRideRoute(RoutePlanParam param) {
+    final _routePlanParam = param.toJsonString();
+    L.p('方法calculateRideRoute dart端参数: _routePlanParam -> $_routePlanParam');
+    return _searchChannel
+        .invokeMethod(
+      'search#calculateRideRoute',
+      {'routePlanParam': _routePlanParam},
+    )
+        .then((result) => result as String)
+        .then((json) => RideRouteResult.fromJson(jsonDecode(json)));
+  }
+
   /// 地址转坐标 [name]表示地址，第二个参数表示查询城市，中文或者中文全拼，citycode、adcode
   Future<GeocodeResult> searchGeocode(String name, String city) {
     L.p('方法searchGeocode dart端参数: name -> $name, cityCode -> $city');

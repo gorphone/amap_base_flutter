@@ -77,6 +77,60 @@ class UnifiedDriveStep(driveStep: DriveStep) {
     val TMCs: List<UnifiedTMC> = driveStep.tmCs.map { UnifiedTMC(it) }
 }
 
+internal class UnifiedWalkRouteResult(walkRouteResult: WalkRouteResult) {
+    /// 起始
+    val startPos: LatLng = walkRouteResult.startPos.toLatLng()
+
+    /// 终点
+    val targetPos: LatLng = walkRouteResult.targetPos.toLatLng()
+
+    /// 路段
+    val paths: List<UnifiedWalkPath> = walkRouteResult.paths.map { UnifiedWalkPath(it) }
+}
+
+class UnifiedWalkPath(drivePath: WalkPath) {
+    val steps: List<UnifiedWalkStep> = drivePath.steps.map { UnifiedWalkStep(it) }
+}
+
+class UnifiedWalkStep(driveStep: WalkStep) {
+    val instruction: String = driveStep.instruction
+    val orientation: String = driveStep.orientation
+    val road: String = driveStep.road
+    val distance: Double = driveStep.distance.toDouble()
+    val duration: Double = driveStep.duration.toDouble()
+    val polyline: List<LatLng> = driveStep.polyline.map { it.toLatLng() }
+    val action: String = driveStep.action
+    val assistantAction: String = driveStep.assistantAction
+}
+
+
+internal class UnifiedRideRouteResult(rideRouteResult: RideRouteResult) {
+    /// 起始
+    val startPos: LatLng = rideRouteResult.startPos.toLatLng()
+
+    /// 终点
+    val targetPos: LatLng = rideRouteResult.targetPos.toLatLng()
+
+    /// 路段
+    val paths: List<UnifiedRidePath> = rideRouteResult.paths.map { UnifiedRidePath(it) }
+}
+
+class UnifiedRidePath(drivePath: RidePath) {
+    val steps: List<UnifiedRideStep> = drivePath.steps.map { UnifiedRideStep(it) }
+}
+
+class UnifiedRideStep(driveStep: RideStep) {
+    val instruction: String = driveStep.instruction
+    val orientation: String = driveStep.orientation
+    val road: String = driveStep.road
+    val distance: Double = driveStep.distance.toDouble()
+    val duration: Double = driveStep.duration.toDouble()
+    val polyline: List<LatLng> = driveStep.polyline.map { it.toLatLng() }
+    val action: String = driveStep.action
+    val assistantAction: String = driveStep.assistantAction
+}
+
+
 class UnifiedRouteSearchCity(routeSearchCity: RouteSearchCity) {
     val districts: List<UnifiedDistrict> = routeSearchCity.districts.map { UnifiedDistrict(it) }
 }
