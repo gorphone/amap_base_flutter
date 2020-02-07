@@ -9,6 +9,8 @@ import android.view.View
 import com.amap.api.maps.AMap
 import com.amap.api.maps.AMapOptions
 import com.amap.api.maps.TextureMapView
+import com.amap.api.maps.model.CameraPosition
+
 import com.amap.api.maps.model.Marker
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
@@ -111,17 +113,17 @@ class AMapView(context: Context,
         })
 
         mapView.map.setOnCameraChangeListener(object: AMap.OnCameraChangeListener {
-            override fun onCameraChange(CameraPosition cameraPosition) {
+            override fun onCameraChange(cameraPosition:CameraPosition) {
 
             }
 
-            override fun onCameraChangeFinish(CameraPosition cameraPosition) {
+            override fun onCameraChangeFinish(cameraPosition:CameraPosition ) {
                 var o = JSONObject()
                 o.put("latitude", cameraPosition.target?.latitude)
                 o.put("longitude", cameraPosition.target?.longitude)
                 mapChangeEventSink?.success(o.toString());
             }
-        );
+        });
 
         mapView.map.setOnMarkerClickListener {
             var o = JSONObject()
