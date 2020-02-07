@@ -25,7 +25,7 @@ import org.json.JSONObject
 import java.util.concurrent.atomic.AtomicInteger
 
 const val mapChannelName = "me.yohom/map"
-const val mapChangeChannelName = "me.yohom/marker_event"
+const val mapChangeChannelName = "me.yohom/mapview_event"
 const val markerClickedChannelName = "me.yohom/marker_event"
 const val success = "调用成功"
 
