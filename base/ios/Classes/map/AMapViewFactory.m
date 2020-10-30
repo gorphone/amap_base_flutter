@@ -20,11 +20,11 @@ static NSString *mapChangeEventChannelName = @"me.yohom/mapview_event";
 static NSString *markerEventChannelName = @"me.yohom/marker_event";
 
 @interface MarkerEventHandler : NSObject <FlutterStreamHandler>
-@property(nonatomic) FlutterEventSink sink;
+@property(nonatomic, strong) FlutterEventSink sink;
 @end
 
 @interface MapChangeEventHandler : NSObject <FlutterStreamHandler>
-@property(nonatomic) FlutterEventSink sink;
+@property(nonatomic, strong) FlutterEventSink sink;
 @end
 
 @implementation MarkerEventHandler {
@@ -157,7 +157,6 @@ static NSString *markerEventChannelName = @"me.yohom/marker_event";
   _mapChangeEventChannel = [FlutterEventChannel eventChannelWithName:[NSString stringWithFormat:@"%@%lld", mapChangeEventChannelName, _viewId] binaryMessenger:[AMapBasePlugin registrar].messenger];
   
   [_mapChangeEventChannel setStreamHandler:_mapChangeEventHandler];
-    NSLog(@"setup done=============");
 }
 
 #pragma MAMapViewDelegate
@@ -172,7 +171,9 @@ static NSString *markerEventChannelName = @"me.yohom/marker_event";
                             @"latitude": @(annotation.coordinate.latitude),
                             @"longitude": @(annotation.coordinate.longitude),
                             };
-        _eventHandler.sink([d mj_JSONString]);
+        if (_eventHandler.sink != NULL) {
+            _eventHandler.sink([d mj_JSONString]);
+        }
     }
 }
 
@@ -196,7 +197,9 @@ static NSString *markerEventChannelName = @"me.yohom/marker_event";
                             @"latitude": @(annotation.coordinate.latitude),
                             @"longitude": @(annotation.coordinate.longitude),
                             };
-        _eventHandler.sink([d mj_JSONString]);
+        if (_eventHandler.sink != NULL) {
+            _eventHandler.sink([d mj_JSONString]);
+        }
     }
 }
 
@@ -329,8 +332,10 @@ static NSString *markerEventChannelName = @"me.yohom/marker_event";
                         @"latitude": @(centerCoordinate.latitude),
                         @"longitude": @(centerCoordinate.longitude),
                         };
-    if (animated) {
+    if (_mapChangeEventHandler.sink != NULL) {
         _mapChangeEventHandler.sink([d mj_JSONString]);
+    } else {
+        NSLog(@"map change is not listened");
     }
 }
 

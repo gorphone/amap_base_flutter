@@ -4,7 +4,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
-#import "AMapLocationCommonObj.h"
+#import <AMapLocationKit/AMapLocationCommonObj.h>
 
 
 @class CLLocation;

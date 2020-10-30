@@ -6,6 +6,7 @@
 #import "MapModels.h"
 #import "NSString+Color.h"
 #import "MJExtension.h"
+#import <AMapNaviKit/MAMapView.h>
 
 
 @implementation MarkerAnnotation {

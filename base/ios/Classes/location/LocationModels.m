@@ -2,9 +2,10 @@
 // Created by Yohom Bao on 2018-12-15.
 //
 
-#import "AMapLocationManager.h"
 #import "LocationModels.h"
+#import <AMapFoundationKit/AMapFoundationKit.h>
 
+#import <AMapLocationKit/AMapLocationKit.h>
 
 @implementation UnifiedAMapLocation {
 

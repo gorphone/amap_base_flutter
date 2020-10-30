@@ -59,11 +59,13 @@ static AMapLocationManager *_locationManager;
     _locationManager.delegate = self;
 
     [options applyTo:_locationManager];
+    _locationManager.locationTimeout = 10;
+    _locationManager.reGeocodeTimeout = 10;
     
     NSLog(@"isOnceLocation %d", options.isOnceLocation);
 
     if (options.isOnceLocation) {
-        [_locationManager requestLocationWithReGeocode:YES
+        [_locationManager requestLocationWithReGeocode:NO
                                        completionBlock:^(CLLocation *location, AMapLocationReGeocode *regeocode, NSError *error) {
                                            if (error) {
                                                result([FlutterError errorWithCode:[NSString stringWithFormat:@"%d", error.code]
